@@ -1,0 +1,19 @@
+---
+- service:
+    name: firewalld
+    state: started
+
+- name: open port for home assistant
+  firewalld:
+    port: 8123/tcp
+    permanent: true
+    state: enabled
+    immediate: yes
+
+- name: open port for mqtt
+  firewalld: 
+    port: 1883/tcp
+    permanent: true
+    state: enabled
+    immediate: yes
+

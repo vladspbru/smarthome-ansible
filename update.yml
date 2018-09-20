@@ -1,0 +1,8 @@
+- hosts: all
+  become: yes
+
+  tasks:
+    - name: bbb distr update
+      include_role:
+        name: bbb
+        tasks_from: update

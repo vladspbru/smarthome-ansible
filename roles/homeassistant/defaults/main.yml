@@ -1,0 +1,31 @@
+---
+# defaults file for ansible-homeassistant
+
+homeassistant_user: homeassistant
+homeassistant_config: /home/{{ homeassistant_user }}/home-assistant
+homeassistant_version: latest
+homeassistant_virtualenv: /home/{{ homeassistant_user }}/venv
+
+#for virtualenv
+homeassistant_python_executable: python3
+
+#homeassistant_additional_apt_dependencies: []
+homeassistant_additional_apt_dependencies: 
+  - gcc
+  - build-essential
+  - libxslt-dev
+  - libxml2-dev
+  - nmap
+  - net-tools
+  - libffi-dev
+  - libssl-dev
+  - python3-yaml
+  - python3-lxml
+  - python3-netifaces
+    
+#homeassistant_additional_pip_dependencies: []
+homeassistant_additional_pip_dependencies: 
+  - appdirs
+  - packaging
+  - colorlog
+  - wheel

@@ -1,0 +1,92 @@
+---
+# tasks file for ansible-homeassistant
+
+- name: Create homeassistant user
+  user: 
+    name: "{{ homeassistant_user }}"
+    comment: "Home Assistant"
+    #system: yes
+    shell: "/bin/bash"
+  become: yes
+
+- include: systemd.yml
+
+#- include: firewall.yml
+#  when: ansible_distribution == "Fedora"
+
+- name: Install apt dependencies
+  apt: name={{ item }} state=latest update_cache=true 
+  become: yes
+  with_items:
+    - python3
+    - python3-dev
+    - python3-virtualenv
+    - git
+
+- name: Install apt dependencies
+  apt: name={{ item }} state=latest update_cache=true 
+  become: yes
+  with_items: "{{ homeassistant_additional_apt_dependencies }}"
+
+- name: check if virtualenv exists
+  stat:
+    path: "{{ homeassistant_virtualenv }}/bin/python"
+  register:
+    stat_result
+
+- name: create virtualenv
+  command: virtualenv -p {{ homeassistant_python_executable  }}  {{ homeassistant_virtualenv }}
+  become_user: "{{ homeassistant_user }}"
+  become: yes
+  when:
+    stat_result.stat.exists == False
+
+- name: Install homeassistant latest version
+  pip:
+    name: homeassistant
+    executable: "{{ homeassistant_virtualenv }}/bin/pip"
+    extra_args: "--upgrade"
+  become_user: "{{ homeassistant_user }}"
+  become: yes
+  when: homeassistant_version == 'latest'
+  notify:
+    - restart homeassistant
+
+- name: Install homeassistant version {{ homeassistant_version }}
+  pip:
+    name: homeassistant
+    version: "{{ homeassistant_version }}"
+    executable: "{{ homeassistant_virtualenv }}/bin/pip"
+  become_user: "{{ homeassistant_user }}"
+  become: yes
+  when: homeassistant_version != 'latest'
+  notify:
+    - restart homeassistant
+
+- name: Install additional pip dependencies
+  pip:
+    name: "{{ homeassistant_additional_pip_dependencies | join(' ') }}"
+    executable: "{{ homeassistant_virtualenv }}/bin/pip"
+  become_user: "{{ homeassistant_user }}"
+  become: yes
+  when: homeassistant_additional_pip_dependencies|length > 0
+  notify:
+    - restart homeassistant
+
+- name: install config from git
+  git:
+    repo: "{{ homeassistant_git_config }}"
+    dest: "{{ homeassistant_config }}"
+  become_user: "{{ homeassistant_user }}"
+  become: yes
+  when: homeassistant_git_config is defined
+  notify:
+    - restart homeassistant
+
+- name: create config directory
+  file:
+    path: "{{ homeassistant_config }}"
+    state: directory
+    mode: 02775
+    owner: "{{ homeassistant_user }}"
+    group: "{{ homeassistant_user }}"

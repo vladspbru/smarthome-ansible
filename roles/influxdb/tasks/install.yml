@@ -1,0 +1,12 @@
+    - name: Install influxdb packages
+      apt: update_cache=yes name={{ item }}
+      with_items:
+        - influxdb
+        - influxdb-client
+
+    - name: start influxdb
+      systemd:
+        name: influxdb
+        daemon_reload: yes
+        enabled: yes
+        state: started	

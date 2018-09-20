@@ -1,0 +1,12 @@
+---
+- name: Install systemd unit file
+  template: 
+    src: systemd.j2
+    dest: /etc/systemd/system/homeassistant.service
+    mode: 0755
+    owner: root
+    group: root
+  become: yes
+  notify:
+    - reload systemctl
+ 
