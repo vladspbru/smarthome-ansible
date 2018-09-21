@@ -1,0 +1,10 @@
+---
+  - hosts: all
+  become: yes
+  tasks:
+    - name: config user vladislav 
+      include_role:
+        name: base
+        tasks_from: users
+    
+    

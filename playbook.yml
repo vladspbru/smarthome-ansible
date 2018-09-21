@@ -1,0 +1,9 @@
+---
+
+- hosts: bbb
+  become: yes
+  roles:
+    - bbb
+    - mosquitto
+    - influxdb
+    - homeassistant

@@ -50,7 +50,7 @@
   become: yes
   when: homeassistant_version == 'latest'
   notify:
-    - restart homeassistant
+    - restart-homeassistant
 
 - name: Install homeassistant version {{ homeassistant_version }}
   pip:
@@ -61,7 +61,7 @@
   become: yes
   when: homeassistant_version != 'latest'
   notify:
-    - restart homeassistant
+    - restart-homeassistant
 
 - name: Install additional pip dependencies
   pip:
@@ -71,7 +71,7 @@
   become: yes
   when: homeassistant_additional_pip_dependencies|length > 0
   notify:
-    - restart homeassistant
+    - restart-homeassistant
 
 - name: install config from git
   git:
@@ -81,7 +81,7 @@
   become: yes
   when: homeassistant_git_config is defined
   notify:
-    - restart homeassistant
+    - restart-homeassistant
 
 - name: create config directory
   file:

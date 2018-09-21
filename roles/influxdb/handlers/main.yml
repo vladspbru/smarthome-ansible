@@ -1,0 +1,13 @@
+---
+- name: reload-systemctl
+  command: systemctl daemon-reload
+  become: yes
+  
+- name: restart-influxdb
+  become: yes
+  service: 
+    name: influxdb
+    daemon_reload: yes
+    enabled: yes
+    state: restarted
+ 

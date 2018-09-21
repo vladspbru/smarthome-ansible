@@ -1,10 +1,10 @@
-    - name: Update all packages to the latest version
-      apt:
-        update_cache: yes
-        upgrade: dist
+- name: Update dist packages to the latest version
+    apt:
+    update_cache: yes
+    upgrade: dist
 
-    - name: Remove dependencies that are no longer required
-      apt:
-        autoremove: yes        
+- name: Clean dependencies that are no longer required
+    apt:
+    autoremove: yes        
         
         

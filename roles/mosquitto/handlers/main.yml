@@ -1,0 +1,13 @@
+---
+- name: reload-systemctl
+  command: systemctl daemon-reload
+  become: yes
+
+- name: restart-mosquitto
+  become: yes
+  service: 
+    name: mosquitto
+    daemon_reload: yes
+    enabled: yes
+    state: restarted
+ 

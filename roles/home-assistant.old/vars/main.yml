@@ -1,3 +1,0 @@
-ha_user: ha
-ha_port: 8123
-ha_conf_dir: /opt/home-assistant

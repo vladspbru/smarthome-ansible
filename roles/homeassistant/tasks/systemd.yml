@@ -8,5 +8,6 @@
     group: root
   become: yes
   notify:
-    - reload systemctl
+    - reload-systemctl
+    - restart-homeassistant
  
