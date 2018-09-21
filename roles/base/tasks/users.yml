@@ -7,7 +7,7 @@
 
   tasks:
     - name: Put vladislav to sudoers
-      action: copy src=./files/sudoers.d/ dest=/etc/sudoers.d/
+      copy: src=../files/sudoers.d/ dest=/etc/sudoers.d/
 
     - name: Add user vladislav
       user: name=vladislav groups=admin,sudo append=yes shell=/bin/bash

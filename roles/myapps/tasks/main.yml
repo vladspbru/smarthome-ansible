@@ -1,0 +1,17 @@
+- name: Install additional pip dependencies
+  pip:
+    name: name="{{ item }}"
+    executable: "{{ homeassistant_virtualenv }}/bin/pip"
+  become_user: "{{ homeassistant_user }}"
+  become: yes
+  with_items:
+    - paho-mqtt
+    - python3-influxdb
+
+- name:"Create base folder for my apps"
+  file: path=/opt/myapps state=directory owner=nobody group=nogroup mode=0755
+  
+- name: "Copy the application"
+  copy: scr=../files/mqtt2influxdb/ dest=/opt/myapps/mqtt2influxdb/ owner=nobody group=nogroup mode=0755
+  notify:
+    - restart-apps
