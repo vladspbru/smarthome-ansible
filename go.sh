@@ -8,7 +8,7 @@
 #1 ansible-playbook -u debian -k users.yml --extra-vars "ansible_become_pass=temppwd"
 
 #1 
-ansible-playbook playbook.yml  
+ansible-playbook playbook.yml $1
 #-vvv
 #--syntax-check
 

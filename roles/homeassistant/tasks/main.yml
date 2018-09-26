@@ -1,18 +1,12 @@
 ---
 # tasks file for ansible-homeassistant
 
-- name: Create homeassistant user
+- name: "Create homeassistant user: {{ homeassistant_user }}"
   user: 
     name: "{{ homeassistant_user }}"
     comment: "Home Assistant"
-    #system: yes
     shell: "/bin/bash"
   become: yes
-
-- include: systemd.yml
-
-#- include: firewall.yml
-#  when: ansible_distribution == "Fedora"
 
 - name: Install apt dependencies
   apt: name={{ item }} state=latest update_cache=true 
@@ -29,17 +23,16 @@
   with_items: "{{ homeassistant_additional_apt_dependencies }}"
 
 - name: check if virtualenv exists
-  stat:
-    path: "{{ homeassistant_virtualenv }}/bin/python"
+  stat: path="{{ homeassistant_virtualenv }}/bin/python"
   register:
-    stat_result
+    venv_result
 
 - name: create virtualenv
-  command: virtualenv -p {{ homeassistant_python_executable  }}  {{ homeassistant_virtualenv }}
+  command: virtualenv -p python3  {{ homeassistant_virtualenv }}
   become_user: "{{ homeassistant_user }}"
   become: yes
   when:
-    stat_result.stat.exists == False
+    venv_result.stat.exists == False
 
 - name: Install homeassistant latest version
   pip:
@@ -90,3 +83,11 @@
     mode: 02775
     owner: "{{ homeassistant_user }}"
     group: "{{ homeassistant_user }}"
+
+
+- include: systemd.yml
+
+#- include: firewall.yml
+#  when: ansible_distribution == "Fedora"
+
+

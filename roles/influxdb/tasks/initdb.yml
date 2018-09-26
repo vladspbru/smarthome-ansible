@@ -1,0 +1,6 @@
+---
+- name: "Create database {{influxdb_database_name}}"
+#  influxdb_database:
+#      database_name: "{{influxdb_database_name}}"
+#      state: present
+  command: "influx -execute 'CREATE DATABASE {{influxdb_database_name}}'"

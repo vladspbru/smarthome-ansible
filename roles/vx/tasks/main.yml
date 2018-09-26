@@ -1,0 +1,62 @@
+---
+- name: "Create user: {{ vx_user }}"
+  user: 
+    name: "{{ vx_user }}"
+    comment: "Vx project user"
+    system: yes
+    shell: "/bin/bash"
+  become: yes
+
+- name: "Install python3"
+  apt: name={{ item }} state=latest 
+  become: yes
+  with_items:
+    - python3
+    - python3-virtualenv
+
+- name: "Check if virtualenv exists"
+  stat: path="{{ vx_virtualenv }}/bin/python"
+  register:
+    venv_result
+
+- name: "Create virtualenv {{ vx_virtualenv }}"
+  command: "virtualenv -p python3  {{ vx_virtualenv }}"
+  become_user: "{{ vx_user }}"
+  become: yes
+  when:
+    venv_result.stat.exists == False
+
+- name: "Create vx base apps folder {{ vx_apps_dir }}"
+  file: 
+    path: "{{vx_apps_dir}}" 
+    state: directory 
+    owner: "{{ vx_user }}"
+    group: "{{ vx_user }}"
+    mode: 0755
+
+- name: "Copy mqtt2influxdb app"
+  copy: 
+    src: files/mqtt2influxdb/ 
+    dest: "{{ vx_apps_dir }}/mqtt2influxdb/" 
+    owner: "{{ vx_user }}"
+    group: "{{ vx_user }}"
+    mode: 0755
+
+- name: "Install mqtt2influxdb dependencies"
+  pip:
+    requirements: "{{ vx_apps_dir }}/mqtt2influxdb/requirements.txt"
+    virtualenv: "{{ vx_virtualenv }}"
+  become_user: "{{ vx_user }}"
+  become: yes
+
+- name: "Install mqtt2influxdb systemd unit file"
+  template: 
+    src: mqtt2influxdb.service.j2
+    dest: /etc/systemd/system/mqtt2influxdb.service
+    mode: 0755
+    owner: root
+    group: root
+  become: yes
+  notify:
+    - reload-systemctl
+    - restart-mqtt2influxdb

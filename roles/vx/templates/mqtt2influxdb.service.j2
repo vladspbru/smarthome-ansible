@@ -1,0 +1,14 @@
+[Unit]
+Description=Polling MQTT write to InfluxDb
+After=network-online.target
+
+[Service]
+Type=simple
+User={{ vx_user }}
+ExecStartPre=source {{ vx_virtualenv }}/bin/activate 
+ExecStart={{ vx_virtualenv }}/bin/python3 {{ vx_apps_dir }}/mqtt2influxdb/subscriber_influxdb.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

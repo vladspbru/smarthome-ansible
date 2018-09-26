@@ -1,0 +1,3 @@
+vx_user: vxuser
+vx_apps_dir: "/home/{{ vx_user }}/vx"
+vx_virtualenv: "/home/{{ vx_user }}/venv"

@@ -1,0 +1,4 @@
+---
+influxdb_database_name: mqtt2influxdb
+
+
