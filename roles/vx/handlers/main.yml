@@ -5,5 +5,5 @@
   become: yes
 
 - name: restart-mqtt2influxdb
-  service: name=mqtt2influxdb state=restarted
+  service: name=mqtt2influxdb state=restarted enabled=yes
   become: yes

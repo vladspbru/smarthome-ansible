@@ -94,7 +94,12 @@ def on_message(client, userdata, msg):
 
 
 def main():
-    with open("mqtt2influxdb.conf", 'r') as ymlfile:
+    import argparse
+    parser = argparse.ArgumentParser(description="Mqtt to InfluxDb gate.")
+    parser.add_argument('-c', '--cfg', dest='cfg', help='config yaml file', default="mqtt2influxdb.conf")
+    args = parser.parse_args()
+
+    with open(args.cfg, 'r') as ymlfile:
         cfg = yaml.load(ymlfile)
 
     writer = InfluxDbWriter(cfg)

@@ -14,10 +14,12 @@
     autoremove: yes        
     
 - name: Install mc git and some packages
-  apt: update_cache=yes name="{{ item }}"
+  apt: name="{{ item }}"
   with_items:
     - mc
     - tmux
     - git
-        
-        
+
+- name: Set datetime zone
+  command: "timedatectl set-timezone Europe/Moscow"
+  

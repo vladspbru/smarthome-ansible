@@ -6,7 +6,7 @@ After=network-online.target
 Type=simple
 User={{ vx_user }}
 ExecStartPre=source {{ vx_virtualenv }}/bin/activate 
-ExecStart={{ vx_virtualenv }}/bin/python3 {{ vx_apps_dir }}/mqtt2influxdb/subscriber_influxdb.py
+ExecStart={{ vx_virtualenv }}/bin/python3 {{ vx_apps_dir }}/mqtt2influxdb/mqtt2influxdb.py -c {{ vx_apps_dir }}/mqtt2influxdb/mqtt2influxdb.conf
 Restart=always
 RestartSec=5
 
