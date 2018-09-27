@@ -5,7 +5,8 @@ Description=MicroSD flash card
 What=/dev/mmcblk0p1
 Where=/media/microsd
 Type=ext4
-Options=rw
+Options=rw,nofail,noatime
+SloppyOptions=true
 DirectoryMode=0755
 TimeoutSec=15
 
