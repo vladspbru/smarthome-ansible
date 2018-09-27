@@ -22,4 +22,28 @@
 
 - name: Set datetime zone
   command: "timedatectl set-timezone Europe/Moscow"
+
+
+- name: "Install microsd mount file"
+  template: 
+    src: microsd.mount.j2
+    dest: /etc/systemd/system/media-microsd.mount
+    mode: 0755
+    owner: root
+    group: root
+  become: yes
+  notify:
+    - reload-systemctl
+
+- name: "Install microsd automount file"
+  template: 
+    src: microsd.automount.j2
+    dest: /etc/systemd/system/media-microsd.automount
+    mode: 0755
+    owner: root
+    group: root
+  become: yes
+  notify:
+    - reload-systemctl
+    - restart-microsd-automount
   
