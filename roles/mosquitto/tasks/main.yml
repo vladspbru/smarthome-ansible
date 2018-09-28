@@ -15,3 +15,13 @@
     - reload-systemctl
     - restart-mosquitto
 
+- name: publish mqtt service on avahi 
+  copy:
+    src: mosquitto.service
+    dest: "/etc/avahi/services/mosquitto.service"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload-avahi
+

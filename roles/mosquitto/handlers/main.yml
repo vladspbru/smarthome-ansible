@@ -11,3 +11,9 @@
     enabled: yes
     state: restarted
  
+- name: restart-avahi
+  become: yes
+  service: 
+    name: avahi
+    state: restarted
+ 
