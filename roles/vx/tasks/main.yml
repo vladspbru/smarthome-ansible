@@ -34,17 +34,17 @@
     group: "{{ vx_user }}"
     mode: 0755
 
-- name: "Copy mqtt2influxdb app"
+- name: "Copy mqtt2out apps"
   copy: 
-    src: files/mqtt2influxdb/ 
-    dest: "{{ vx_apps_dir }}/mqtt2influxdb/" 
+    src: files/mqtt2out/ 
+    dest: "{{ vx_apps_dir }}/mqtt2out/"
     owner: "{{ vx_user }}"
     group: "{{ vx_user }}"
     mode: 0755
 
-- name: "Install mqtt2influxdb dependencies"
+- name: "Install mqtt2out dependencies"
   pip:
-    requirements: "{{ vx_apps_dir }}/mqtt2influxdb/requirements.txt"
+    requirements: "{{ vx_apps_dir }}/mqtt2out/requirements.txt"
     virtualenv: "{{ vx_virtualenv }}"
   become_user: "{{ vx_user }}"
   become: yes
@@ -60,3 +60,15 @@
   notify:
     - reload-systemctl
     - restart-mqtt2influxdb
+    
+- name: "Install mqtt2mqtt systemd unit file"
+  template: 
+    src: mqtt2mqtt.service.j2
+    dest: /etc/systemd/system/mqtt2mqtt.service
+    mode: 0755
+    owner: root
+    group: root
+  become: yes
+  notify:
+    - reload-systemctl
+    - restart-mqtt2mqtt

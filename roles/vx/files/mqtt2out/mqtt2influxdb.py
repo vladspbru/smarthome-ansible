@@ -22,7 +22,7 @@ class InfluxDbWriter(object):
         if hasattr(self, "influxdb"):
             self.influxdb.close()
         self.influxdb = InfluxDBClient(host=self.addr, port=self.port,
-                                       database=self.sch)  # username=self.user, password=self.pwd)
+                                       database=self.sch, timeout=3, retries=2)  # username=self.user, password=self.pwd)
         try:
             version = self.influxdb.ping()
             if version:
@@ -55,13 +55,18 @@ class InfluxDbWriter(object):
 
 def on_connect(client, userdata, flags, rc):
     cfg, writer = userdata
-    print("Mqtt broker {}:{} connected with result code {}".format(cfg["mqtt_address"],cfg["mqtt_port"], rc))
+    print("Mqtt broker {}:{} connected. Result: {}".format(cfg["mqtt_address"], cfg["mqtt_port"], mqtt.connack_string(rc)))
 
     print("Mqtt subscribtion:")
-    topics = cfg["mqtt_topic"]
+    topics = cfg["mqtt_topics"]
     for t in topics:
         client.subscribe(t)
         print("- {}".format(t))
+
+
+def on_disconnect(client, userdata, rc):
+    cfg, writer = userdata
+    print("Mqtt broker {}:{} DISCONNECTED".format(cfg["mqtt_address"], cfg["mqtt_port"]))
 
 
 def on_message(client, userdata, msg):
@@ -104,9 +109,9 @@ def main():
 
     writer = InfluxDbWriter(cfg)
 
-    # Initialize the mqtt_cli that should connect to the Mosquitto broker
     mqtt_cli = mqtt.Client(client_id=cfg["mqtt_clientid"], userdata=(cfg, writer))
     mqtt_cli.on_connect = on_connect
+    mqtt_cli.on_disconnect = on_disconnect
     mqtt_cli.on_message = on_message
     connOK = False
 
@@ -117,7 +122,7 @@ def main():
         except:
             connOK = False
             print("Bad connection to broker  {}:{} ".format(cfg["mqtt_address"], cfg["mqtt_port"]))
-        time.sleep(3)
+            time.sleep(3)
 
     # Blocking loop to the Mosquitto broker
     mqtt_cli.loop_forever()

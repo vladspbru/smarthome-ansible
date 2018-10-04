@@ -1,3 +1,6 @@
 vx_user: vxuser
 vx_apps_dir: "/home/{{ vx_user }}/vx"
 vx_virtualenv: "/home/{{ vx_user }}/venv"
+    
+vx_inet_mqttbroker: "iot.eclipse.org"
+vx_inet_mqttbroker_prefix: "garden61/"
