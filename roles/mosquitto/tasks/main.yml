@@ -1,5 +1,5 @@
 - name: Install mosquitto packages
-  apt: update_cache=yes name="{{ item }}"
+  apt: name="{{ item }}"
   with_items:
     - mosquitto
     - mosquitto-clients 

@@ -1,6 +1,6 @@
 ---
 - name: Install influxdb packages
-  apt: update_cache=yes name="{{ item }}"
+  apt: name="{{ item }}"
   with_items:
     - influxdb
     - influxdb-client

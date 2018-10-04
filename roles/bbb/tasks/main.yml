@@ -8,6 +8,7 @@
     - bonescript
     - bone101
     - apache2*
+    - librobotcontrol
 
 - name: Remove dependencies that are no longer required
   apt:

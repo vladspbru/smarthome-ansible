@@ -4,10 +4,11 @@
   become: yes
   roles:
     - bbb
+    - avahi
 #    - mosquitto
-#    - influxdb
-#    - homeassistant
-#    - vx
+    - influxdb
+    - homeassistant
+    - vx
   vars:
      prj: &prj smarthome
      vx_user: *prj

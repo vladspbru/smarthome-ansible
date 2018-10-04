@@ -1,0 +1,7 @@
+- name: Install avahi services packages
+  apt: name="{{ item }}"
+  with_items:
+    - avahi-daemon
+    - avahi-utils
+    - avahi-dnsconfd
+    
