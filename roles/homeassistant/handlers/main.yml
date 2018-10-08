@@ -7,3 +7,9 @@
 - name: restart-homeassistant
   service: name=homeassistant state=restarted
   become: yes
+
+- name: reload-avahi
+  become: yes
+  service: 
+    name: avahi
+    state: restarted

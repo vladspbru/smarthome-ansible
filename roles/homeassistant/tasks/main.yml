@@ -87,6 +87,18 @@
 
 - include: systemd.yml
 
+
+- name: publish hass web frontend on avahi 
+  copy:
+    src: hass.service
+    dest: "/etc/avahi/services/homeassistant.service"
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - reload-avahi
+
+
 #- include: firewall.yml
 #  when: ansible_distribution == "Fedora"
 
