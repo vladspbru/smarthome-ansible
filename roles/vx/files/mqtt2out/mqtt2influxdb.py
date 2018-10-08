@@ -22,7 +22,8 @@ class InfluxDbWriter(object):
         if hasattr(self, "influxdb"):
             self.influxdb.close()
         self.influxdb = InfluxDBClient(host=self.addr, port=self.port,
-                                       database=self.sch, timeout=3, retries=2)  # username=self.user, password=self.pwd)
+                                       database=self.sch, timeout=3,
+                                       retries=2)  # username=self.user, password=self.pwd)
         try:
             version = self.influxdb.ping()
             if version:
@@ -55,7 +56,8 @@ class InfluxDbWriter(object):
 
 def on_connect(client, userdata, flags, rc):
     cfg, writer = userdata
-    print("Mqtt broker {}:{} connected. Result: {}".format(cfg["mqtt_address"], cfg["mqtt_port"], mqtt.connack_string(rc)))
+    print("Mqtt broker {}:{} connected. Result: {}".format(cfg["mqtt_address"], cfg["mqtt_port"],
+                                                           mqtt.connack_string(rc)))
 
     print("Mqtt subscribtion:")
     topics = cfg["mqtt_topics"]
@@ -69,19 +71,30 @@ def on_disconnect(client, userdata, rc):
     print("Mqtt broker {}:{} DISCONNECTED".format(cfg["mqtt_address"], cfg["mqtt_port"]))
 
 
+def str_is_boolean(v):
+    res = None
+    if v.lower() in ("yes", "true", "t", "1", "on", "online"):
+        res = True
+    if v.lower() in ("no", "false", "f", "0", "off", "offline"):
+        res = False
+    return res
+
+
 def on_message(client, userdata, msg):
     message = msg.payload.decode("utf-8")
-    is_float_value = False
-    val = 0.
-    try:
-        # Convert the string to a float so that it is stored as a number and not a string in the database
-        val = float(message)
-        is_float_value = True
-    except:
-        print("Skipping message /no float/\n{}: {} ".format(msg.topic, message))
-        is_float_value = False
 
-    if is_float_value:
+    val = None
+    # is number
+    try:
+        val = float(message)
+    except:
+        val = None
+
+    # is boolean
+    if val == None:
+        val = str_is_boolean(message)
+
+    if val != None:
         # Use utc as timestamp
         receiveTime = datetime.datetime.utcnow()
         json_body = [
@@ -96,6 +109,8 @@ def on_message(client, userdata, msg):
         cfg, writer = userdata
         writer.write(json_body)
         print("{} | {} | {} ".format(str(receiveTime), msg.topic, val))
+    else:
+        print("no float, number or boolean\n{} | {} ".format(msg.topic, message))
 
 
 def main():
