@@ -1,0 +1,24 @@
+---
+
+- name: "Create InfluxDb data dir {{ influxdb_database_dir }}"
+  become: yes
+  file: 
+    path: "{{influxdb_database_dir}}" 
+    state: directory 
+    owner: "influxdb"
+    group: "influxdb"
+    mode: 0755
+  when: influxdb_database_dir is defined
+
+- name: "Edit influxdb.conf"
+  become: yes
+  ini_file: 
+    path: "/etc/influxdb/influxdb.conf" 
+    section: "data"
+    option: "dir"
+    value: '"{{influxdb_database_dir}}"'
+    backup: yes
+  when: influxdb_database_dir is defined
+  notify:
+    - restart-influxdb
+

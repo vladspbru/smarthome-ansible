@@ -8,4 +8,5 @@
     - reload-systemctl
     - restart-influxdb
 
+- include: influxdb_config.yml
 - include: initdb.yml
