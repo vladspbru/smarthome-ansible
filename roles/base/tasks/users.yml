@@ -1,16 +1,8 @@
-# users.yml
----
-- hosts: all
-  gather_facts: no
-  become: yes
-  become_user: root
+- name: Put vladislav to sudoers
+  copy: src=../files/sudoers.d/ dest=/etc/sudoers.d/
 
-  tasks:
-    - name: Put vladislav to sudoers
-      copy: src=../files/sudoers.d/ dest=/etc/sudoers.d/
+- name: Add user vladislav
+  user: name=vladislav groups=admin,sudo append=yes shell=/bin/bash
 
-    - name: Add user vladislav
-      user: name=vladislav groups=admin,sudo append=yes shell=/bin/bash
-
-    - authorized_key: user=vladislav key="{{ lookup('file', '/home/vladislav/.ssh/id_rsa.pub') }}"
+- authorized_key: user=vladislav key="{{ lookup('file', '/home/vladislav/.ssh/id_rsa.pub') }}"
 

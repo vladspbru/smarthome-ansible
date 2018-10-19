@@ -3,12 +3,12 @@
 - hosts: bbb
   become: yes
   roles:
-#    - bbb
-#    - avahi
-#    - mosquitto
+    - bbb
+    - avahi
+    - mosquitto
     - influxdb
-#    - homeassistant
-#     - vx
+    - homeassistant
+    - vx
   vars:
      prj: &prj smarthome
      vx_user: *prj
